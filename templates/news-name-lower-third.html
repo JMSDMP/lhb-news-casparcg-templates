@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="stylesheet" href="./global.css" />
+        <script src="./webcg-framework.umd.js"></script>
+        <style>
+            #name {
+                font-size: 2em;
+                width: 75%;
+                height: 66%;
+            }
+
+            #role {
+                width: 65%;
+                height: 34%;
+            }
+
+            #lower-third {
+                grid-area: lower;
+
+                width: 80%;
+                transition: all 2500ms ease-in-out;
+                transition-delay: 2500ms;
+            }
+
+            #lower-third > * {
+                transition-property: width, color, opacity;
+                transition-duration: 1000ms, 500ms, 500ms;
+                transition-timing-function: ease-in-out;
+                transition-delay: 0ms, 500ms, 0ms;
+                text-wrap-mode: nowrap;
+
+                display: flex;
+                align-items: center;
+                padding-left: 1.5rem;
+
+            }
+
+            #lower-third:not(.active) > * {
+                transition-delay: 0ms, 0ms, 500ms;
+                width: 0%;
+                color: transparent;
+                opacity: 0;
+            }
+
+            #lower-third.active > * {
+                opacity: 1;
+            }
+
+        </style>
+    </head>
+    <body>
+        <main id="news-grid">
+            <div id="lower-third">
+                <div id="name" class="box-with-padding primary"></div>
+                <div id="role" class="box-with-padding secondary"></div>
+            </div>
+        </main>
+
+        <script>
+            window.debugData = {
+                f0: "John Smith",
+                f1: "Politics Correspondent"
+            }
+
+            const graphic = document.getElementById("lower-third");
+            const nameEle = document.getElementById("name");
+            const roleEle = document.getElementById("role");
+
+            webcg.addEventListener("play", () => {
+                graphic.classList.add("active");
+            });
+
+            webcg.addEventListener("stop", () => {
+                graphic.classList.remove("active");
+            });
+
+            webcg.addEventListener("data", (data) => {
+                console.log("hej");
+                if (!("name" in data && "role" in data)) {
+                    data.name = data.f0;
+                    data.role = data.f1;
+                }
+                nameEle.innerText = data.name;
+                roleEle.innerText = data.role;
+            });
+        </script>
+    </body>
+</html>

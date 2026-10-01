@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./webcg-framework.umd.js"></script>
+    <link rel="stylesheet" href="./global.css">
+    <style>
+        #graphic-container {
+            grid-area: logo;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        #logo-clock {            
+            transition: width 500ms;
+            height: 100%;
+            width: 0%;
+            overflow: hidden;
+        }
+
+        #logo > *, #time {
+            transition: opacity 500ms ease-in-out;
+            opacity: 0;
+            width: 100%;
+            text-align: center;
+            mask-image: linear-gradient(to right,#0000, #000f 10%, #000f 90%, #0000);
+        }
+
+        #time {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .clock-transition #time {
+            mask-image: linear-gradient(to bottom,#0000, #000f 0.5em, #000f calc(100% - 0.5em), #0000);
+        }
+
+        #logo-clock.playing #logo *, #logo-clock.clock.playing #time {
+            opacity: 1;
+        }
+
+        #logo-clock.playing {
+            /* margin-top: 0%; */
+            height: 100%;
+            width: 100%;
+        }
+
+        #logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25em;
+            height: 100%;
+        }
+        
+
+        #logo > span {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 0.1em;
+        }
+
+        #logo #main-word {
+            font-family: 'Ubuntu Mono';
+            font-size: 1.25em;
+        }
+
+
+        #logo-clock.clock #logo {
+            height: 66%;
+        }
+
+        #logo-clock.clock #clock {
+            height: 34%;
+        }
+        
+        #clock {
+            height: 0%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        #logo-clock.clock-transition #logo {
+            transition: height 250ms;
+        }
+
+        #logo-clock.clock-transition #clock {
+            transition: all 250ms;
+        }
+    </style>
+</head>
+<body>
+    <main id="news-grid">
+        <div id="graphic-container">
+            <div id="logo-clock" class="">
+                <div id="logo" class="primary">
+                    <span>
+                        <span id="main-word">LHB</span>
+                        <span id="sub-word">news</span>
+                    </span>
+                </div>
+                <div id="clock" class="secondary">
+                    <span id="time">HH:MM</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        const graphic = document.getElementById("logo-clock");
+        const clockContainer = document.getElementById("clock")
+        const clockEle = document.getElementById("time")
+        function updateClock() {
+            var time = new Date()
+            clockEle.innerText = time.getHours().toString().padStart(2, "0") + ":" +
+                time.getMinutes().toString().padStart(2, "0");
+
+        }
+
+        updateClock()
+        setInterval(updateClock, 100)
+
+        webcg.addEventListener("play", () => {
+            graphic.classList.add("playing");
+            setTimeout(()=> {
+                graphic.classList.add("clock-transition");
+            },10)
+            
+        })
+
+        webcg.addEventListener("stop", () => {
+            graphic.classList.remove("playing")
+            graphic.classList.remove("clock-transition");
+        })
+
+        webcg.addEventListener("data", (data) => {
+            if (data.clock == 1) {
+                graphic.classList.add("clock");
+            } else {
+                graphic.classList.remove("clock");
+            }
+        })
+    </script>
+</body>
+</html>

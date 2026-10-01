@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./webcg-framework.umd.js"></script>
+    <link rel="stylesheet" href="./global.css">
+    <style>
+        #bug-container {
+            grid-area: top;
+            column-span: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        #bug-container.right {
+            align-items: flex-end;
+        }
+
+        #bug-container.right #bug {
+            flex-direction: row-reverse !important;
+        }
+
+        #bug {
+            display: flex;
+            flex-direction: row;
+            height: 100%;
+        }
+
+        #livemark {
+            width: 0;
+            /* aspect-ratio: 1; */
+            font-weight: bold;
+            background-color: #cc4444;
+            color: #662222;
+            height: 100%;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #location {
+            padding: 0 0;
+            width: 0;
+          
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+
+            text-wrap-mode: nowrap;
+        }
+
+        #location-text {
+            width: 100%;
+            mask-image: linear-gradient(to right, #000f 95%, #0000);
+        }
+        
+        #location, #livemark {
+            overflow: hidden;
+        }
+
+        
+        #location > *, #livemark > * {
+            opacity: 0;
+        }
+        
+        #bug-container.playing #location > *, #bug-container.playing #livemark > * {
+            opacity: 1;
+        }
+        
+        #bug-container.playing #location {
+            padding: 0 0.3em;
+            width: 10em;
+        }
+        
+        #bug-container.playing #livemark {
+            width: 3em;
+        }
+        
+        /* animations */
+
+        #location, #livemark,
+        #location *, #livemark * {
+            transition-property: all;
+            transition-duration: 556ms;
+            transition-timing-function: ease-in-out;
+        }
+
+        /* in delays */
+
+        .animate-in #livemark {
+            transition-delay: 0ms;
+        }
+
+        .animate-in #livemark * {
+            transition-delay: 222ms;
+        }
+
+        .animate-in #location {
+            transition-delay: 222ms;
+        }
+
+        .animate-in #location * {
+            transition-delay: 444ms;
+        }
+
+        /* out delays */
+
+        .animate-out #livemark {
+            transition-delay: 444ms;
+        }
+
+        .animate-out #livemark * {
+            transition-delay: 222ms;
+        }
+
+        .animate-out #location {
+            transition-delay: 222ms;
+        }
+
+        .animate-out #location * {
+            transition-delay: 0ms;
+        }
+
+    </style>
+</head>
+<body>
+    <main id="news-grid">
+        <div id="bug-container">
+            <div id="bug">
+                <!-- <div id="livemark">◉</div> -->
+                <div id="livemark">
+                    <span>LIVE</span>
+                </div>
+                <!-- ● -->
+                <div id="location" class="secondary">
+                    <span id="location-text"></span>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        const graphic = document.getElementById("bug-container");
+        const locationText = document.getElementById("location-text");
+
+        webcg.addEventListener("play", () => {
+            graphic.classList.remove("animate-out");
+            graphic.classList.add("animate-in");
+            graphic.classList.add("playing");
+        })
+        
+        webcg.addEventListener("stop", () => {
+            graphic.classList.add("animate-out");
+            graphic.classList.remove("animate-in");
+            graphic.classList.remove("playing");
+        })
+
+        webcg.addEventListener("data", (data) => {
+            if (data.position == "left") {
+                graphic.classList.remove("right");
+                graphic.classList.add("left");
+            } else if (data.position == "right") {
+                graphic.classList.remove("left");
+                graphic.classList.add("right");
+            }
+
+            if (data.location != undefined) {
+                locationText.innerText = data.location
+            }
+        })
+    </script>
+</body>
+</html>
