@@ -2,6 +2,8 @@
 
 This repo contains the [CasparCG](https://github.com/CasparCG/server) HTML graphics templates used for LHB News.
 
+**Live demo: <https://jmsdmp.github.io/lhb-news-casparcg-templates/index.html>**
+
 ***Note:** Unfortunately, the headline template will not look as intended in browsers which do not support [`interpolate-size`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/interpolate-size).*
 
 ---
